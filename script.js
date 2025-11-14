@@ -1,5 +1,8 @@
 // ID de Google Sheets
 const SHEET_ID = '1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0';
+const rangTaula1Classificacio="A2:J6";
+const rangTaula2Classificacio="A8:H16";
+const rangTaulaDistribucióPerEquips="A1:U22";
 
 // Variable per emmagatzemar dades de partits
 let partitsData = null;
@@ -115,14 +118,14 @@ async function loadClassificacio() {
 
     try {
         // Carregar primera taula (A2:J6)
-        const url1 = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&range=A2:J6&headers=1`;
+        const url1 = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&range=${rangTaula1Classificacio}&headers=1`;
         const response1 = await fetch(url1);
         const text1 = await response1.text();
         const jsonText1 = text1.substring(47).slice(0, -2);
         const data1 = JSON.parse(jsonText1);
         
         // Carregar segona taula (A7:H fins al final)
-        const url2 = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&range=A8:H16&headers=1`;
+        const url2 = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&range=${rangTaula2Classificacio}&headers=1`;
         const response2 = await fetch(url2);
         const text2 = await response2.text();
         const jsonText2 = text2.substring(47).slice(0, -2);
@@ -172,7 +175,7 @@ async function loadPartits() {
     showStatus('Carregant distribució per partits...', 'loading');
 
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=A1:U22&headers=1`;
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=${rangTaulaDistribucióPerEquips}&headers=1`;
         const response = await fetch(url);
         const text = await response.text();
         const jsonText = text.substring(47).slice(0, -2);
