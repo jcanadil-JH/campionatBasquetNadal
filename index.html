@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Classificació</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛹️‍♂️ Campionat de bàsquet de Nadal</h1>
+        </div>
+
+        <!-- Pestanyes -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('classificacio')">📊 Classificació</button>
+            <button class="tab-button" onclick="showTab('partits')">🕘 Distribució per equips</button>
+            <button class="tab-button" onclick="showTab('pistes')">🏀 Pistes</button>
+
+        </div>
+
+        <!-- Contingut Classificació -->
+        <div id="classificacio" class="tab-content active">
+
+            <div class="config-section">
+                <button class="btn" onclick="refreshCurrentTab()">🔄 Actualitzar</button>
+                <div class="status" id="status"></div>
+            </div>
+
+            <div class="table-container">
+                <h3>🏆 Classificació</h3>
+                <table id="dataTable1">
+                    <thead id="tableHead1"></thead>
+                    <tbody id="tableBody1"></tbody>
+                </table>
+            </div>
+
+            <div class="table-container" style="padding-top: 0;">
+                <h3>📊 Resultats</h3>
+                <table id="dataTable2">
+                    <thead id="tableHead2"></thead>
+                    <tbody id="tableBody2"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contingut Distribució per Partits -->
+        <div id="partits" class="tab-content">
+            <div class="table-container">
+                <h3>🕘 Distribució per equips</h3>
+                <div class="filter-section">
+                    <label for="partitSelect">Selecciona un equip:</label>
+                    <select id="partitSelect" onchange="filterPartit()">
+                        <option value="">-- Tots els equips --</option>
+                    </select>
+                </div>
+                <table id="dataTablePartits">
+                    <thead id="tableHeadPartits"></thead>
+                    <tbody id="tableBodyPartits"></tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Contingut Pistes -->
+        <div id="pistes" class="tab-content">
+            <div class="table-container">
+                <h3>🏀 Pistes</h3>
+                <div id="pistesImage" style="text-align: center; margin-bottom: 20px;"></div>
+                <table id="dataTablePistes">
+                    <thead id="tableHeadPistes"></thead>
+                    <tbody id="tableBodyPistes"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="last-update" id="lastUpdate"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
+
+
+
