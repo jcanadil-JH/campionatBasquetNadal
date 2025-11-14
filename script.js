@@ -172,7 +172,7 @@ async function loadPartits() {
     showStatus('Carregant distribució per partits...', 'loading');
 
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=A2:U22`;
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=A1:U22&headers=1`;
         const response = await fetch(url);
         const text = await response.text();
         const jsonText = text.substring(47).slice(0, -2);
@@ -236,15 +236,17 @@ function filterPartit() {
         // Crear capçalera amb dues columnes: "Camp" i "Valor"
         const headerRow = document.createElement('tr');
         const th1 = document.createElement('th');
-        th1.textContent = 'Pista i equip contrari';
+        th1.textContent = 'Hora';
         const th2 = document.createElement('th');
-        th2.textContent = 'Hora';
+        th2.textContent = 'Pista i equip contrari';
         headerRow.appendChild(th1);
         headerRow.appendChild(th2);
         thead.appendChild(headerRow);
         
         // Crear una fila per cada columna del partit original
         partitsData.table.cols.forEach((col, index) => {
+            if (index === 0) return;
+            
             const tr = document.createElement('tr');
             
             // Primera columna: nom del camp (capçalera original)

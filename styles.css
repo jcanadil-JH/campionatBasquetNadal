@@ -109,6 +109,14 @@ body {
     color: #6c757d;
     transition: all 0.3s;
 }
+#dataTable1 td,
+#dataTable2 td {
+    text-align: center;
+}
+#dataTable1 th,
+#dataTable2 th {
+    text-align: center;
+}
 
 .tab-button:hover {
     background: #e9ecef;
@@ -161,6 +169,7 @@ th {
 td {
     padding: 12px 15px;
     border-bottom: 1px solid #e9ecef;
+    white-space: nowrap;
 }
 
 tr:hover {
