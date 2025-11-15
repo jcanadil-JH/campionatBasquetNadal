@@ -5,8 +5,8 @@
 const ADMIN_ENABLED = true; // Canvia a false per desactivar la pestanya Actes
 
 // CONFIGURA AQUÍ LES TEVES CREDENCIALS OAUTH (pendent)
-const CLIENT_ID = '249755894132-dih81ui9hv20dqqusr14vjpm7m5ll30u.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyB6U8QiwtEvNSyO-fqS1fVnqHJrxyGBA8U';
+const CLIENT_ID = 'EL_TEU_CLIENT_ID.apps.googleusercontent.com';
+const API_KEY = 'LA_TEVA_API_KEY';
 
 // ID de la carpeta de Drive on es guardaran les fotos
 const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
@@ -109,11 +109,24 @@ function handleAuthClick() {
 
 async function checkUserPermissions() {
     try {
-        // Obtenir el correu de l'usuari
-        const response = await gapi.client.request({
-            'path': 'https://www.googleapis.com/oauth2/v2/userinfo',
+        // Obtenir el correu de l'usuari des del token d'accés
+        const token = gapi.client.getToken();
+        
+        // Decodificar el token per obtenir la informació de l'usuari
+        const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                'Authorization': `Bearer ${token.access_token}`
+            }
         });
-        userEmail = response.result.email;
+        
+        if (!response.ok) {
+            throw new Error('No s\'ha pogut obtenir la informació de l\'usuari');
+        }
+        
+        const userData = await response.json();
+        userEmail = userData.email;
+        
+        console.log('Usuari autenticat:', userEmail);
 
         // Carregar la llista d'usuaris autoritzats del full Info
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Info&range=F3:G`;
@@ -128,6 +141,8 @@ async function checkUserPermissions() {
             for (let row of data.table.rows) {
                 const role = row.c[0] ? (row.c[0].v || '') : '';
                 const email = row.c[1] ? (row.c[1].v || '') : '';
+                
+                console.log('Comprovant:', email, 'Rol:', role);
                 
                 if (email === userEmail && (role === 'Admin' || role === 'Tècnic')) {
                     authorized = true;
@@ -145,11 +160,11 @@ async function checkUserPermissions() {
             setTimeout(hideStatus, 3000);
             loadResultatsData();
         } else {
-            showStatus('No tens permisos per accedir a aquesta secció', 'error');
+            showStatus(`No tens permisos per accedir a aquesta secció. Correu: ${userEmail}`, 'error');
         }
     } catch (error) {
         console.error('Error d\'autenticació:', error);
-        showStatus('Error d\'autenticació', 'error');
+        showStatus('Error d\'autenticació: ' + error.message, 'error');
     }
 }
 
