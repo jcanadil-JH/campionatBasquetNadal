@@ -5,14 +5,14 @@
 const ADMIN_ENABLED = true; // Canvia a false per desactivar la pestanya Actes
 
 // CONFIGURA AQUÍ LES TEVES CREDENCIALS OAUTH (pendent)
-const CLIENT_ID = '249755894132-dih81ui9hv20dqqusr14vjpm7m5ll30u.apps.googleusercontent.com';
-const API_KEY = 'AIzaSyB6U8QiwtEvNSyO-fqS1fVnqHJrxyGBA8U';
+const CLIENT_ID = 'EL_TEU_CLIENT_ID.apps.googleusercontent.com';
+const API_KEY = 'LA_TEVA_API_KEY';
 
 // ID de la carpeta de Drive on es guardaran les fotos
 const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
 
 // Scopes necessaris
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file';
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email';
 
 // ============================================
 // VARIABLES GLOBALS
@@ -93,26 +93,42 @@ if (ADMIN_ENABLED) {
 // ============================================
 
 function handleAuthClick() {
+    if (!gapiInited || !gisInited) {
+        showStatus('Les APIs de Google encara s\'estan carregant. Si us plau, espera uns segons i torna-ho a provar.', 'error');
+        return;
+    }
+
     tokenClient.callback = async (resp) => {
         if (resp.error !== undefined) {
-            throw (resp);
+            console.error('Error en el callback:', resp);
+            showStatus('Error d\'autenticació: ' + resp.error, 'error');
+            return;
         }
+        console.log('Token rebut correctament');
         await checkUserPermissions();
     };
 
     if (gapi.client.getToken() === null) {
+        // Sol·licitar token per primera vegada
         tokenClient.requestAccessToken({prompt: 'consent'});
     } else {
+        // Ja tenim token, sol·licitar-ne un de nou
         tokenClient.requestAccessToken({prompt: ''});
     }
 }
 
 async function checkUserPermissions() {
     try {
-        // Obtenir el correu de l'usuari des del token d'accés
+        // Obtenir el token d'accés
         const token = gapi.client.getToken();
         
-        // Decodificar el token per obtenir la informació de l'usuari
+        if (!token || !token.access_token) {
+            throw new Error('No s\'ha pogut obtenir el token d\'accés');
+        }
+        
+        console.log('Token obtingut, consultant informació de l\'usuari...');
+
+        // Obtenir el correu de l'usuari des del token d'accés
         const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
             headers: {
                 'Authorization': `Bearer ${token.access_token}`
@@ -120,6 +136,8 @@ async function checkUserPermissions() {
         });
         
         if (!response.ok) {
+            const errorData = await response.text();
+            console.error('Error resposta API:', errorData);
             throw new Error('No s\'ha pogut obtenir la informació de l\'usuari');
         }
         
@@ -129,6 +147,7 @@ async function checkUserPermissions() {
         console.log('Usuari autenticat:', userEmail);
 
         // Carregar la llista d'usuaris autoritzats del full Info
+        console.log('Carregant llista d\'usuaris autoritzats...');
         const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Info&range=F3:G`;
         const sheetResponse = await fetch(url);
         const text = await sheetResponse.text();
@@ -138,15 +157,17 @@ async function checkUserPermissions() {
         // Comprovar si l'usuari està autoritzat
         let authorized = false;
         if (data.table && data.table.rows) {
+            console.log('Total usuaris a la llista:', data.table.rows.length);
             for (let row of data.table.rows) {
                 const role = row.c[0] ? (row.c[0].v || '') : '';
                 const email = row.c[1] ? (row.c[1].v || '') : '';
                 
                 console.log('Comprovant:', email, 'Rol:', role);
                 
-                if (email === userEmail && (role === 'Admin' || role === 'Tècnic')) {
+                if (email.toLowerCase() === userEmail.toLowerCase() && (role === 'Admin' || role === 'Tècnic')) {
                     authorized = true;
                     userRole = role;
+                    console.log('✅ Usuari autoritzat!');
                     break;
                 }
             }
@@ -160,6 +181,7 @@ async function checkUserPermissions() {
             setTimeout(hideStatus, 3000);
             loadResultatsData();
         } else {
+            console.log('❌ Usuari NO autoritzat');
             showStatus(`No tens permisos per accedir a aquesta secció. Correu: ${userEmail}`, 'error');
         }
     } catch (error) {
