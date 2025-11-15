@@ -17,6 +17,7 @@
             <button class="tab-button active" onclick="showTab('classificacio')">📊 Classificació</button>
             <button class="tab-button" onclick="showTab('partits')">🕘 Distribució per equips</button>
             <button class="tab-button" onclick="showTab('pistes')">🏀 Pistes</button>
+            <button class="tab-button" id="actesTab" onclick="showTab('actes')">📝 Actes</button>
 
         </div>
 
@@ -72,9 +73,52 @@
                 </table>
             </div>
         </div>
+        <!-- Contingut Actes (Nova pestanya) -->
+<div id="actes" class="tab-content">
+    <div class="table-container">
+        <h3>📝 Actes</h3>
+        
+        <!-- Botó d'autenticació -->
+        <div id="authSection" class="auth-section">
+            <button class="btn" onclick="handleAuthClick()">🔐 Iniciar sessió amb Google</button>
+            <p style="margin-top: 10px; color: #6c757d; font-size: 0.9em;">Cal autenticar-se per gestionar les actes</p>
+        </div>
+
+        <!-- Secció principal (oculta fins autenticar-se) -->
+        <div id="actesContent" style="display: none;">
+            <!-- Selector Pistes/Temps -->
+            <div class="filter-section">
+                <div class="radio-group">
+                    <label>
+                        <input type="radio" name="viewType" value="pistes" checked onchange="changeViewType()">
+                        🎯 Pistes
+                    </label>
+                    <label>
+                        <input type="radio" name="viewType" value="temps" onchange="changeViewType()">
+                        ⏰ Temps
+                    </label>
+                </div>
+            </div>
+
+            <!-- Desplegable dinàmic -->
+            <div class="filter-section">
+                <label for="actesSelect">Selecciona:</label>
+                <select id="actesSelect" onchange="loadActesTable()">
+                </select>
+            </div>
+
+            <!-- Taula d'actes -->
+            <table id="dataTableActes">
+                <thead id="tableHeadActes"></thead>
+                <tbody id="tableBodyActes"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
         <div class="last-update" id="lastUpdate"></div>
     </div>
-
+    <script src="admin.js"></script>
+    <link rel="stylesheet" href="admin.css">
     <script src="script.js"></script>
 </body>
 

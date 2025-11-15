@@ -1,0 +1,182 @@
+/* Estils per la pestanya Actes */
+
+.auth-section {
+    text-align: center;
+    padding: 40px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.radio-group {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 1.1em;
+}
+
+.radio-group input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Cel·les editables */
+.editable-cell {
+    background: #fff3cd !important;
+    border: 2px solid #ffc107 !important;
+}
+
+.editable-cell input {
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    font-size: 1em;
+    text-align: center;
+}
+
+.editable-cell input:focus {
+    outline: none;
+}
+
+/* Icones d'acció */
+.action-icons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3em;
+    padding: 5px;
+    transition: transform 0.2s;
+}
+
+.icon-button:hover {
+    transform: scale(1.2);
+}
+
+.icon-edit {
+    color: #667eea;
+}
+
+.icon-camera {
+    color: #28a745;
+}
+
+.icon-save {
+    color: #007bff;
+}
+
+.icon-cancel {
+    color: #dc3545;
+}
+
+/* Modal per càmera */
+.camera-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+.camera-modal.active {
+    display: flex;
+}
+
+.camera-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 90%;
+    max-height: 90%;
+    text-align: center;
+}
+
+.camera-content video,
+.camera-content canvas {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.camera-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+/* Indicador de càrrega */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.loading-spinner {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.loading-spinner::after {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 20px auto;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .radio-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .action-icons {
+        flex-wrap: wrap;
+    }
+}

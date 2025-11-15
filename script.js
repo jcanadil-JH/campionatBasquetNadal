@@ -1,8 +1,8 @@
 // ID de Google Sheets
-const SHEET_ID = '1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0';
-const rangTaula1Classificacio="A2:J6";
-const rangTaula2Classificacio="A8:H16";
-const rangTaulaDistribucióPerEquips="A1:U22";
+const SHEET_ID = '1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0';  //ID full de càlcul
+const rangTaula1Classificacio="A2:J6"; //rang que conté el primer bloc d'informació de la pestanya Classificació
+const rangTaula2Classificacio="A8:H16"; //rang que conté el segon bloc d'informació de la pestanya Classificació
+const rangTaulaDistribucioPerEquips="A1:U22"; //rang que conté les dades de la pestanya Distribució per equips
 
 // Variable per emmagatzemar dades de partits
 let partitsData = null;
@@ -175,7 +175,7 @@ async function loadPartits() {
     showStatus('Carregant distribució per partits...', 'loading');
 
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=${rangTaulaDistribucióPerEquips}&headers=1`;
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=${rangTaulaDistribucioPerEquips}&headers=1`;
         const response = await fetch(url);
         const text = await response.text();
         const jsonText = text.substring(47).slice(0, -2);
