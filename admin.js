@@ -5,8 +5,8 @@
 const ADMIN_ENABLED = true; // Canvia a false per desactivar la pestanya Actes
 
 // CONFIGURA AQUÍ LES TEVES CREDENCIALS OAUTH (pendent)
-const CLIENT_ID = 'EL_TEU_CLIENT_ID.apps.googleusercontent.com';
-const API_KEY = 'LA_TEVA_API_KEY';
+const CLIENT_ID = '249755894132-dih81ui9hv20dqqusr14vjpm7m5ll30u.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyB6U8QiwtEvNSyO-fqS1fVnqHJrxyGBA8U';
 
 // ID de la carpeta de Drive on es guardaran les fotos
 const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
