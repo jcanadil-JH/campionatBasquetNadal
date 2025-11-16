@@ -180,3 +180,8 @@
         flex-wrap: wrap;
     }
 }
+
+.editable-cell input {
+    width: 3ch;
+    max-width: 3ch;
+}
