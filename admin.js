@@ -601,7 +601,7 @@ async function capturePhoto() {
         await uploadToDrive(blob);
     }, 'image/jpeg', 0.9);
 }
-
+/*
 async function uploadToDrive(blob) {
     try {
         showLoading(true);
@@ -658,6 +658,105 @@ async function uploadToDrive(blob) {
         showLoading(false);
     }
 }
+*/
+
+async function uploadToDrive(blob) {
+    try {
+        showLoading(true);
+        
+        // Generar nom del fitxer
+        const rowIndex = parseInt(currentPhotoRow.dataset.rowIndex);
+        const colStart = parseInt(currentPhotoRow.dataset.colStart);
+        
+        let pistaName = '';
+        let tempsName = '';
+        
+        if (currentViewType === 'pistes') {
+            // Obtenir nom de la pista
+            pistaName = resultatsData.table.rows[0].c[colStart].v || 'Pista';
+            // Obtenir el temps (columna A de la fila actual)
+            tempsName = resultatsData.table.rows[rowIndex].c[0].v || 'Temps';
+        } else {
+            // Obtenir nom de la pista (primera cel·la del grup)
+            pistaName = resultatsData.table.rows[0].c[colStart].v || 'Pista';
+            // Obtenir el temps (columna A)
+            tempsName = resultatsData.table.rows[rowIndex].c[0].v || 'Temps';
+        }
+        
+        const fileName = `2025_${pistaName}_${tempsName}.jpg`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+        
+        console.log('Pujant foto amb nom:', fileName);
+        
+        // Convertir blob a base64
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        
+        await new Promise((resolve, reject) => {
+            reader.onload = async () => {
+                try {
+                    const base64Data = reader.result.split(',')[1];
+                    
+                    // Utilitzar l'API de Google Drive
+                    const metadata = {
+                        name: fileName,
+                        mimeType: 'image/jpeg',
+                        parents: [DRIVE_FOLDER_ID]
+                    };
+                    
+                    // Pujar el fitxer utilitzant gapi.client
+                    const boundary = '-------314159265358979323846';
+                    const delimiter = "\r\n--" + boundary + "\r\n";
+                    const close_delim = "\r\n--" + boundary + "--";
+                    
+                    const contentType = 'image/jpeg';
+                    const multipartRequestBody =
+                        delimiter +
+                        'Content-Type: application/json; charset=UTF-8\r\n\r\n' +
+                        JSON.stringify(metadata) +
+                        delimiter +
+                        'Content-Type: ' + contentType + '\r\n' +
+                        'Content-Transfer-Encoding: base64\r\n' +
+                        '\r\n' +
+                        base64Data +
+                        close_delim;
+                    
+                    const response = await gapi.client.request({
+                        'path': '/upload/drive/v3/files',
+                        'method': 'POST',
+                        'params': {'uploadType': 'multipart'},
+                        'headers': {
+                            'Content-Type': 'multipart/related; boundary="' + boundary + '"'
+                        },
+                        'body': multipartRequestBody
+                    });
+                    
+                    if (response.status === 200) {
+                        console.log('Foto pujada correctament:', response);
+                        showStatus('Foto desada correctament a Drive!', 'success');
+                        setTimeout(hideStatus, 3000);
+                        resolve();
+                    } else {
+                        throw new Error('Error pujant la foto');
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.onerror = reject;
+        });
+        
+    } catch (error) {
+        console.error('Error pujant foto:', error);
+        showStatus('Error al desar la foto: ' + (error.message || error), 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+
+
+
+
 
 // ============================================
 // UTILITATS
