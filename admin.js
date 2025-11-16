@@ -601,7 +601,7 @@ async function capturePhoto() {
         await uploadToDrive(blob);
     }, 'image/jpeg', 0.9);
 }
-/*
+
 async function uploadToDrive(blob) {
     try {
         showLoading(true);
@@ -658,7 +658,9 @@ async function uploadToDrive(blob) {
         showLoading(false);
     }
 }
-*/async function uploadToDrive(blob) {
+
+/*
+async function uploadToDrive(blob) {
     try {
         showLoading(true);
         
@@ -793,7 +795,7 @@ async function uploadToDrive(blob) {
         showLoading(false);
     }
 }
-
+*/
 
 
 
