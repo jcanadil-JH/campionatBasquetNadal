@@ -477,7 +477,7 @@ async function saveEdit(button) {
     // Obtenir valors editatsconst values = [];
     const updates = [];
     
-    for (let i = 2; i < 4; i++) {
+    for (let i = 3; i < 5; i++) {
         const input = tds[i].querySelector('input');
         const value = input.value.trim().toUpperCase();
         
