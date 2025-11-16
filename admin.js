@@ -31,7 +31,7 @@ let currentSelection = '';
 let editingRowIndex = null;
 
 // ========== MODE DEBUG - DESCOMENTA PER TREBALLAR SENSE AUTENTICACIÓ ==========
-window.addEventListener('load', () => {
+/*window.addEventListener('load', () => {
     setTimeout(() => {
         document.getElementById('authSection').style.display = 'none';
         document.getElementById('actesContent').style.display = 'block';
@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
         userEmail = 'test@test.com';
         loadResultatsData();
     }, 1000);
-});
+});*/
 // ===============================================================================
 
 // ============================================
