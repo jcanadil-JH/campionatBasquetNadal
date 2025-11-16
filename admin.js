@@ -9,7 +9,8 @@ const CLIENT_ID = '249755894132-dih81ui9hv20dqqusr14vjpm7m5ll30u.apps.googleuser
 const API_KEY = 'AIzaSyB6U8QiwtEvNSyO-fqS1fVnqHJrxyGBA8U';
 
 // ID de la carpeta de Drive on es guardaran les fotos
-const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
+//const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
+const DRIVE_FOLDER_ID = '18aBM_LH3eRNXJneYgXxFWf9EFxZFQ_fB';
 
 // Scopes necessaris
 //const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email';
