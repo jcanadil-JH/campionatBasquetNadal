@@ -30,6 +30,19 @@ let currentViewType = 'pistes'; // 'pistes' o 'temps'
 let currentSelection = '';
 let editingRowIndex = null;
 
+// ========== MODE DEBUG - DESCOMENTA PER TREBALLAR SENSE AUTENTICACIÓ ==========
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('actesContent').style.display = 'block';
+        isAuthenticated = true;
+        userRole = 'Admin';
+        userEmail = 'test@test.com';
+        loadResultatsData();
+    }, 1000);
+});
+// ===============================================================================
+
 // ============================================
 // INICIALITZACIÓ
 // ============================================
@@ -172,7 +185,6 @@ async function checkUserPermissions() {
                 }
             }
         }
-
         if (authorized) {
             isAuthenticated = true;
             document.getElementById('authSection').style.display = 'none';
@@ -189,7 +201,7 @@ async function checkUserPermissions() {
         showStatus('Error d\'autenticació: ' + error.message, 'error');
     }
 }
-
+    
 // ============================================
 // CÀRREGA DE DADES
 // ============================================
@@ -288,12 +300,14 @@ function loadPistesView() {
     
     // Crear capçalera (4 columnes)
     const headerRow = document.createElement('tr');
-    for (let i = 0; i < 4; i++) {
-        const th = document.createElement('th');
-        const col = resultatsData.table.cols[colIndex + i];
-        th.textContent = col ? (col.label || '') : '';
-        headerRow.appendChild(th);
-    }
+    const th1 = document.createElement('th');
+    th1.textContent = "Hora";
+    headerRow.appendChild(th1);
+    const th2 = document.createElement('th');
+    th2.colSpan = 4;
+    th2.textContent = "Resultats dels partits";
+    headerRow.appendChild(th2);
+
     // Columna d'accions
     const thActions = document.createElement('th');
     thActions.textContent = 'Accions';
@@ -303,14 +317,29 @@ function loadPistesView() {
     // Crear files (saltar la primera que són les pistes)
     for (let rowIndex = 1; rowIndex < resultatsData.table.rows.length; rowIndex++) {
         const row = resultatsData.table.rows[rowIndex];
+        // Comprovar si la segona columna té dades
+        const secondColumnCell = row.c[colIndex]; // colIndex és la segona columna (i=1)
+        const secondColumnValue = secondColumnCell ? (secondColumnCell.f || secondColumnCell.v || '').toString().trim() : '';
+    
+    // Saltar aquesta fila si la segona columna està buida
+    if (secondColumnValue === '') {
+        continue;
+    }
+    
+        
         const tr = document.createElement('tr');
         tr.dataset.rowIndex = rowIndex;
         tr.dataset.colStart = colIndex;
         
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             const td = document.createElement('td');
-            const cell = row.c[colIndex + i];
-            td.textContent = cell ? (cell.f || cell.v || '') : '';
+            if (i === 0) {
+                const headerCell = row.c[0];
+                td.textContent = headerCell ? (headerCell.f || headerCell.v || '') : '';
+            } else {
+                const cell = row.c[colIndex + i-1];
+                td.textContent = cell ? (cell.f || cell.v || '') : '';
+            }
             td.dataset.colIndex = colIndex + i;
             tr.appendChild(td);
         }
@@ -333,12 +362,13 @@ function loadTempsView() {
     
     // Crear capçalera (4 columnes)
     const headerRow = document.createElement('tr');
-    for (let i = 0; i < 4; i++) {
-        const th = document.createElement('th');
-        const col = resultatsData.table.cols[i];
-        th.textContent = col ? (col.label || '') : '';
-        headerRow.appendChild(th);
-    }
+    const th1 = document.createElement('th');
+    th1.textContent = "Pista";
+    headerRow.appendChild(th1);    
+    const th2 = document.createElement('th');
+    th2.colSpan = 4;
+    th2.textContent = "Resultats dels partits";
+    headerRow.appendChild(th2);
     // Columna d'accions
     const thActions = document.createElement('th');
     thActions.textContent = 'Accions';
@@ -346,7 +376,7 @@ function loadTempsView() {
     thead.appendChild(headerRow);
     
     // Crear files (grups de 4 columnes)
-    let colIndex = 0;
+    let colIndex = 1;
     let groupIndex = 0;
     while (colIndex < row.c.length) {
         // Comprovar si hi ha contingut en aquest grup
@@ -366,11 +396,16 @@ function loadTempsView() {
             const tr = document.createElement('tr');
             tr.dataset.rowIndex = rowIndex;
             tr.dataset.colStart = colIndex;
-            
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 const td = document.createElement('td');
-                const cell = row.c[colIndex + i];
-                td.textContent = cell ? (cell.f || cell.v || '') : '';
+                if (i === 0) {
+                    const headerCell = resultatsData.table.rows[0].c[colIndex];
+                    td.textContent = headerCell ? (headerCell.f || headerCell.v || '') : '';
+                } else {
+                    const cell = row.c[colIndex + i-1];
+                    td.textContent = cell ? (cell.f || cell.v || '') : '';
+                }
+            
                 td.dataset.colIndex = colIndex + i;
                 tr.appendChild(td);
             }
@@ -407,7 +442,7 @@ function startEdit(button) {
     const tds = tr.querySelectorAll('td');
     
     // Fer editables les columnes 3 i 4 (índexs 2 i 3)
-    for (let i = 2; i < 4; i++) {
+    for (let i = 3; i < 5; i++) {
         const td = tds[i];
         const currentValue = td.textContent;
         td.classList.add('editable-cell');
