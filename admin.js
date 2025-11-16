@@ -602,7 +602,7 @@ async function capturePhoto() {
         await uploadToDrive(blob);
     }, 'image/jpeg', 0.9);
 }
-
+/*
 async function uploadToDrive(blob) {
     try {
         showLoading(true);
@@ -660,74 +660,6 @@ async function uploadToDrive(blob) {
     }
 }
 
-/*
-async function uploadToDrive(blob) {
-    try {
-        showLoading(true);
-        
-        // Generar nom del fitxer
-        const rowIndex = parseInt(currentPhotoRow.dataset.rowIndex);
-        const colStart = parseInt(currentPhotoRow.dataset.colStart);
-        
-        let pistaName = '';
-        let tempsName = '';
-        
-        if (currentViewType === 'pistes') {
-            pistaName = resultatsData.table.rows[0].c[colStart].v || 'Pista';
-            tempsName = resultatsData.table.rows[rowIndex].c[0].v || 'Temps';
-        } else {
-            pistaName = resultatsData.table.rows[0].c[colStart].v || 'Pista';
-            tempsName = resultatsData.table.rows[rowIndex].c[0].v || 'Temps';
-        }
-        
-        const fileName = `2025_${pistaName}_${tempsName}.jpg`.replace(/[^a-zA-Z0-9_.-]/g, '_');
-        
-        console.log('Pujant foto amb nom:', fileName);
-        
-        const token = gapi.client.getToken();
-        if (!token || !token.access_token) {
-            throw new Error('No hi ha token d\'accés disponible');
-        }
-        
-        // Metadata del fitxer
-        const metadata = {
-            name: fileName,
-            mimeType: 'image/jpeg',
-            parents: [DRIVE_FOLDER_ID]
-        };
-        
-        // Crear FormData amb multipart
-        const formData = new FormData();
-        formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
-        formData.append('file', blob, fileName);
-        
-        // Pujar a Drive
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token.access_token}`
-            },
-            body: formData
-        });
-        
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Foto pujada correctament. ID del fitxer:', result.id);
-            showStatus('Foto desada correctament a Drive!', 'success');
-            setTimeout(hideStatus, 3000);
-        } else {
-            const errorText = await response.text();
-            console.error('Error resposta:', response.status, errorText);
-            throw new Error(`Error ${response.status}: ${errorText}`);
-        }
-        
-    } catch (error) {
-        console.error('Error pujant foto:', error);
-        showStatus('Error al desar la foto: ' + (error.message || error), 'error');
-    } finally {
-        showLoading(false);
-    }
-}
 
 async function uploadToDrive(blob) {
     try {
@@ -797,6 +729,74 @@ async function uploadToDrive(blob) {
     }
 }
 */
+async function uploadToDrive(blob) {
+    try {
+        showLoading(true);
+        
+        // Generar nom del fitxer
+        const rowIndex = parseInt(currentPhotoRow.dataset.rowIndex);
+        const colStart = parseInt(currentPhotoRow.dataset.colStart);
+        
+        let pistaName = '';
+        let tempsName = '';
+        
+        if (currentViewType === 'pistes') {
+            pistaName = resultatsData.table.rows[0].c[colStart].v || 'Pista';
+            tempsName = resultatsData.table.rows[rowIndex].c[0].v || 'Temps';
+        } else {
+            pistaName = resultatsData.table.rows[0].c[colStart].v || 'Pista';
+            tempsName = resultatsData.table.rows[rowIndex].c[0].v || 'Temps';
+        }
+        
+        const fileName = `2025_${pistaName}_${tempsName}.jpg`.replace(/[^a-zA-Z0-9_.-]/g, '_');
+        
+        console.log('Pujant foto amb nom:', fileName);
+        
+        const token = gapi.client.getToken();
+        if (!token || !token.access_token) {
+            throw new Error('No hi ha token d\'accés disponible');
+        }
+        
+        // Metadata del fitxer
+        const metadata = {
+            name: fileName,
+            mimeType: 'image/jpeg',
+            parents: [DRIVE_FOLDER_ID]
+        };
+        
+        // Crear FormData amb multipart
+        const formData = new FormData();
+        formData.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+        formData.append('file', blob, fileName);
+        
+        // Pujar a Drive
+        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token.access_token}`
+            },
+            body: formData
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Foto pujada correctament. ID del fitxer:', result.id);
+            showStatus('Foto desada correctament a Drive!', 'success');
+            setTimeout(hideStatus, 3000);
+        } else {
+            const errorText = await response.text();
+            console.error('Error resposta:', response.status, errorText);
+            throw new Error(`Error ${response.status}: ${errorText}`);
+        }
+        
+    } catch (error) {
+        console.error('Error pujant foto:', error);
+        showStatus('Error al desar la foto: ' + (error.message || error), 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
 
 
 
