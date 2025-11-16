@@ -9,8 +9,7 @@ const CLIENT_ID = '249755894132-dih81ui9hv20dqqusr14vjpm7m5ll30u.apps.googleuser
 const API_KEY = 'AIzaSyB6U8QiwtEvNSyO-fqS1fVnqHJrxyGBA8U';
 
 // ID de la carpeta de Drive on es guardaran les fotos
-//const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
-const DRIVE_FOLDER_ID = '18aBM_LH3eRNXJneYgXxFWf9EFxZFQ_fB';
+const DRIVE_FOLDER_ID = '1iyyAySpi-2zDXlNRW6H2dc4WBQY201UX';
 
 // Scopes necessaris
 //const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email';
@@ -771,14 +770,15 @@ async function uploadToDrive(blob) {
         formData.append('file', blob, fileName);
         
         // Pujar a Drive
-        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+        
+        const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token.access_token}`
             },
             body: formData
         });
-        
+      
         if (response.ok) {
             const result = await response.json();
             console.log('Foto pujada correctament. ID del fitxer:', result.id);
