@@ -196,7 +196,7 @@ async function checkUserPermissions() {
 
 async function loadResultatsData() {
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Resultats dels partits&range=A1:ZZ`;
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Resultats dels partits&range=A1:ZZ&headers=1`;
         const response = await fetch(url);
         const text = await response.text();
         const jsonText = text.substring(47).slice(0, -2);
