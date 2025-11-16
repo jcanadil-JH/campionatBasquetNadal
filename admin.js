@@ -487,7 +487,7 @@ async function saveEdit(button) {
             return;
         }
         
-        const colIndex = parseInt(tds[i].dataset.colIndex);
+        const colIndex = parseInt(tds[i-1].dataset.colIndex);
         updates.push({
             row: rowIndex + 2, // +2 perquè A2 és l'inici
             col: colIndex,
