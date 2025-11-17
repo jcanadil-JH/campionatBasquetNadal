@@ -1,8 +1,78 @@
 // ID de Google Sheets
 const SHEET_ID = '1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0';  //ID full de càlcul
-const rangTaula1Classificacio="A2:J7"; //rang que conté el primer bloc d'informació de la pestanya Classificació
-const rangTaula2Classificacio="A9:H29"; //rang que conté el segon bloc d'informació de la pestanya Classificació
-const rangTaulaDistribucioPerEquips="A2:U22"; //rang que conté les dades de la pestanya Distribució per equips
+
+(async () => {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&A2:A`;
+    const response = await fetch(url);
+    const text = await response.text();
+    const jsonText = text.substring(47).slice(0, -2);
+    const data = JSON.parse(jsonText);
+    
+    let lastRow = 2; // Mínim A2
+    if (data.table && data.table.rows) {
+        for (let i = 0; i < data.table.rows.length; i++) {
+            const cell = data.table.rows[i].c[0];
+            const value = cell ? (cell.f || cell.v || '').toString().trim() : '';
+            if (value === 'Grup') {
+                lastRow = i + 1; // +2 perquè comença a A2
+            }
+        }
+    }
+    
+    window.rangTaula1Classificacio = `A2:J${lastRow}`; // Usar window per fer-la global
+    window.rangTaula2Classificacio = `A${lastRow+2}:H29`;
+})();
+
+(async () => {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per equips&range=A2:ZZ`;
+    const response = await fetch(url);
+    const text = await response.text();
+    const jsonText = text.substring(47).slice(0, -2);
+    const data = JSON.parse(jsonText);
+    
+    let lastRow = 2;
+    let lastCol = 0;
+    
+    if (data.table && data.table.rows) {
+        // Trobar última fila amb dades
+        for (let i = 0; i < data.table.rows.length; i++) {
+            const row = data.table.rows[i];
+            // Comprovar si la fila té alguna dada
+            let hasData = false;
+            for (let j = 0; j < row.c.length; j++) {
+                const cell = row.c[j];
+                const value = cell ? (cell.f || cell.v || '').toString().trim() : '';
+                if (value !== '') {
+                    hasData = true;
+                    // Actualitzar última columna
+                    if (j > lastCol) {
+                        lastCol = j;
+                    }
+                }
+            }
+            if (hasData) {
+                lastRow = i + 2; // +2 perquè comença a A2
+            }
+        }
+    }
+    
+    // Convertir índex de columna a lletra (0=A, 1=B, etc.)
+    function getColumnLetter(colIndex) {
+        let letter = '';
+        while (colIndex >= 0) {
+            letter = String.fromCharCode((colIndex % 26) + 65) + letter;
+            colIndex = Math.floor(colIndex / 26) - 1;
+        }
+        return letter;
+    }
+    
+    const lastColLetter = getColumnLetter(lastCol);
+    window.rangTaulaDistribucioPerEquips = `A2:${lastColLetter}${lastRow}`;
+
+})();
+
+
+//const rangTaulaDistribucioPerEquips="A2:U22"; //rang que conté les dades de la pestanya Distribució per equips
 
 // Variable per emmagatzemar dades de partits
 let partitsData = null;
