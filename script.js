@@ -2,75 +2,26 @@
 const SHEET_ID = '1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0';  //ID full de càlcul
 
 (async () => {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&A2:A`;
+    //const SHEET_ID = "1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0";
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&range=I1:J1`;
+
     const response = await fetch(url);
     const text = await response.text();
+
+    // Elimina el prefix/sufix google
     const jsonText = text.substring(47).slice(0, -2);
     const data = JSON.parse(jsonText);
-    
-    let lastRow = 2; // Mínim A2
-    if (data.table && data.table.rows) {
-        for (let i = 0; i < data.table.rows.length; i++) {
-            const cell = data.table.rows[i].c[0];
-            const value = cell ? (cell.f || cell.v || '').toString().trim() : '';
-            if (value === 'Grup') {
-                lastRow = i + 1; // +2 perquè comença a A2
-            }
-        }
-    }
-    
-    window.rangTaula1Classificacio = `A2:J${lastRow}`; // Usar window per fer-la global
-    window.rangTaula2Classificacio = `A${lastRow+2}:H29`;
-})();
+console.log("RAW:", text);
+    // Valor de B25
+    const nCentres = data.table.rows[0].c[0].v;  
+    const nEquips = data.table.rows[0].c[1].v;  
 
-(async () => {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per equips&range=A2:ZZ`;
-    const response = await fetch(url);
-    const text = await response.text();
-    const jsonText = text.substring(47).slice(0, -2);
-    const data = JSON.parse(jsonText);
-    
-    let lastRow = 2;
-    let lastCol = 0;
-    
-    if (data.table && data.table.rows) {
-        // Trobar última fila amb dades
-        for (let i = 0; i < data.table.rows.length; i++) {
-            const row = data.table.rows[i];
-            // Comprovar si la fila té alguna dada
-            let hasData = false;
-            for (let j = 0; j < row.c.length; j++) {
-                const cell = row.c[j];
-                const value = cell ? (cell.f || cell.v || '').toString().trim() : '';
-                if (value !== '') {
-                    hasData = true;
-                    // Actualitzar última columna
-                    if (j > lastCol) {
-                        lastCol = j;
-                    }
-                }
-            }
-            if (hasData) {
-                lastRow = i + 2; // +2 perquè comença a A2
-            }
-        }
-    }
-    
-    // Convertir índex de columna a lletra (0=A, 1=B, etc.)
-    function getColumnLetter(colIndex) {
-        let letter = '';
-        while (colIndex >= 0) {
-            letter = String.fromCharCode((colIndex % 26) + 65) + letter;
-            colIndex = Math.floor(colIndex / 26) - 1;
-        }
-        return letter;
-    }
-    
-    const lastColLetter = getColumnLetter(lastCol);
-    window.rangTaulaDistribucioPerEquips = `A2:${lastColLetter}${lastRow}`;
+    // Si necessites crear rangs basats en aquest valor
+    window.rangTaula1Classificacio = `A2:J${nCentres+2}`;
+    window.rangTaula2Classificacio = `A${nCentres + 4}:H${nEquips+10}`;
+    window.rangTaulaDistribucioPerEquips = `A2:${nEquips+2}`;
 
 })();
-
 
 //const rangTaulaDistribucioPerEquips="A2:U22"; //rang que conté les dades de la pestanya Distribució per equips
 
@@ -194,7 +145,7 @@ async function loadClassificacio() {
         const jsonText1 = text1.substring(47).slice(0, -2);
         const data1 = JSON.parse(jsonText1);
         
-        // Carregar segona taula (A7:H fins al final)
+        // Carregar segona taula (A7: Jfins al final)
         const url2 = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Classificació&range=${rangTaula2Classificacio}&headers=1`;
         const response2 = await fetch(url2);
         const text2 = await response2.text();
