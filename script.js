@@ -1,8 +1,8 @@
 // ID de Google Sheets
 const SHEET_ID = '1gTU3SjgvWw89CPRR9VzveiB5rqh9ZNzuGgR0ryk19F0';  //ID full de càlcul
-const rangTaula1Classificacio="A2:J6"; //rang que conté el primer bloc d'informació de la pestanya Classificació
-const rangTaula2Classificacio="A8:H16"; //rang que conté el segon bloc d'informació de la pestanya Classificació
-const rangTaulaDistribucioPerEquips="A1:U22"; //rang que conté les dades de la pestanya Distribució per equips
+const rangTaula1Classificacio="A2:J7"; //rang que conté el primer bloc d'informació de la pestanya Classificació
+const rangTaula2Classificacio="A9:H29"; //rang que conté el segon bloc d'informació de la pestanya Classificació
+const rangTaulaDistribucioPerEquips="A2:U22"; //rang que conté les dades de la pestanya Distribució per equips
 
 // Variable per emmagatzemar dades de partits
 let partitsData = null;
