@@ -175,7 +175,7 @@ async function loadPartits() {
     showStatus('Carregant distribució per partits...', 'loading');
 
     try {
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per partits&range=${rangTaulaDistribucioPerEquips}&headers=1`;
+        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Distribució per equips&range=${rangTaulaDistribucioPerEquips}&headers=1`;
         const response = await fetch(url);
         const text = await response.text();
         const jsonText = text.substring(47).slice(0, -2);
@@ -274,6 +274,7 @@ function filterPartit() {
 window.addEventListener('load', () => {
     loadClassificacio();
 });
+
 
 
 
