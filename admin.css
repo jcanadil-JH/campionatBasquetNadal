@@ -34,6 +34,7 @@
 .editable-cell {
     background: #fff3cd !important;
     border: 2px solid #ffc107 !important;
+    max-width: 50px;
 }
 
 .editable-cell input {
@@ -182,6 +183,6 @@
 }
 
 .editable-cell input {
-    width: 3ch;
-    max-width: 3ch;
+    width: 50px;
+    max-width: 50px;
 }
